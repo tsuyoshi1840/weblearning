@@ -1,0 +1,52 @@
+/* ===== 色の設定（ここを変えると全体の色が変わる） ===== */
+:root {
+    --bg: #fff8f0; --card: #fff; --text: #4a3f3a; --sub: #8a7a72;
+    --accent: #ff9a76; --accent2: #7ecfb3; --line: #f1e2d5; --code: #fdf3e7;
+}
+@media (prefers-color-scheme: dark) {
+    :root { --bg: #2b2522; --card: #372f2b; --text: #f5e9df; --sub: #c2b1a6; --line: #4a3f3a; --code: #2f2825; }
+}
+
+/* ===== 基本の見た目（タグ指定） ===== */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif; line-height: 1.8; }
+h1, h2 { line-height: 1.4; margin: 0 0 .6rem; }
+h3 { font-size: 1rem; color: var(--sub); margin: 0 0 .3rem; }
+p { margin: 0 0 .8rem; }
+button { font: inherit; cursor: pointer; border: 0; border-radius: 999px; padding: .5rem 1.2rem; background: var(--accent); color: #fff; }
+button:hover { opacity: .85; }
+pre { margin: 0; overflow-x: auto; background: var(--code); border: 1px solid var(--line); border-radius: 12px; padding: .8rem 1rem; font-size: .85rem; line-height: 1.6; }
+
+/* ===== ヘッダー（部品：Class指定） ===== */
+.header { position: sticky; top: 0; z-index: 10; background: var(--card); border-bottom: 2px solid var(--line); padding: .5rem 1rem; }
+.header-bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; max-width: 860px; margin: 0 auto; }
+.header-logo { font-weight: bold; text-decoration: none; color: var(--text); }
+.header-nav { max-width: 860px; margin: .4rem auto 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.header.is-min .header-nav { display: none; }
+.nav-link { text-decoration: none; color: var(--text); padding: .2rem .9rem; border-radius: 999px; background: var(--code); font-size: .9rem; }
+.nav-link.is-active { background: var(--accent2); color: #1f3d33; }
+
+/* ===== メイン ===== */
+.main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 1.4rem; }
+.card.is-top { background: linear-gradient(135deg, #ffe3d3, #dff5ec); color: #4a3f3a; }
+.badge { display: inline-block; background: var(--accent2); color: #1f3d33; border-radius: 999px; padding: 0 .8rem; font-size: .8rem; margin-bottom: .5rem; }
+.code-group { display: grid; gap: .8rem; margin: 1rem 0; }
+.demo, .sample { margin-top: 1rem; }
+.panel-body { background: var(--code); border-radius: 12px; padding: .8rem 1rem; margin-top: .6rem; }
+.sample-box { margin-top: .8rem; }
+.sample-img { max-width: 100%; border-radius: 12px; border: 1px solid var(--line); }
+.sample-msg { color: var(--sub); font-size: .9rem; }
+
+/* ===== フッター ===== */
+.footer { text-align: center; padding: 1.5rem 1rem 2rem; color: var(--sub); font-size: .85rem; }
+
+/* ===== 動作1件ごとの区切り ===== */
+.action { border-top: 2px dashed var(--line); margin-top: 1.6rem; padding-top: 1.2rem; }
+.action:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+.action-title { font-size: 1.15rem; color: var(--text); margin: 0 0 .5rem; }
+
+/* ===== コードのコピーボタン ===== */
+.code-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .3rem; }
+.code-head h3 { margin: 0; }
+.copy-btn { padding: .15rem .8rem; font-size: .8rem; background: var(--accent2); color: #1f3d33; }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>うぇぶら～にんぐ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 中身は各JSが書き込みます（ここは差し込み口だけ） -->
+    <header class="header js-header"></header>
+    <main class="main js-main"></main>
+    <footer class="footer js-footer"></footer>
+
+    <!-- 読み込み順：教材データ（header/main/footer）→ script.js（起動） -->
+    <script src="header.js"></script>
+    <script src="main.js"></script>
+    <script src="footer.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
