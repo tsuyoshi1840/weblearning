@@ -41,12 +41,38 @@ pre { margin: 0; overflow-x: auto; background: var(--code); border: 1px solid va
 /* ===== フッター ===== */
 .footer { text-align: center; padding: 1.5rem 1rem 2rem; color: var(--sub); font-size: .85rem; }
 
+/* ===== 「ページ上部へ」ボタン（画面右下に固定） =====
+   位置を変えるなら right を left に（左下）、
+   中央下なら left: 50%; transform: translateX(-50%); にする */
+.top-btn { position: fixed; right: 1rem; bottom: 1rem; z-index: 20; box-shadow: 0 2px 8px rgba(0, 0, 0, .2); }
+.top-btn[hidden] { display: none; }
+
 /* ===== 動作1件ごとの区切り ===== */
 .action { border-top: 2px dashed var(--line); margin-top: 1.6rem; padding-top: 1.2rem; }
-.action:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
-.action-title { font-size: 1.15rem; color: var(--text); margin: 0 0 .5rem; }
+.action { scroll-margin-top: 7rem; border-radius: 12px; }
+.action-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .5rem; }
+.action-title { font-size: 1.15rem; color: var(--text); margin: 0; }
+
+/* ===== 動作の索引 ===== */
+.index { margin: 1rem 0 .4rem; padding: .8rem 1rem; background: var(--code); border: 1px solid var(--line); border-radius: 12px; }
+.index-list { display: flex; flex-wrap: wrap; gap: .4rem; }
+.index-btn { padding: .2rem .9rem; font-size: .85rem; background: var(--card); color: var(--text); border: 1px solid var(--line); }
+.index-btn:hover { background: var(--accent2); color: #1f3d33; opacity: 1; }
+
+/* 索引・共有リンクで移動したとき、移動先を一瞬ハイライト */
+.action.is-target { animation: target-flash 1.8s ease-out; }
+@keyframes target-flash { from { background: rgba(126, 207, 179, .35); } to { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .action.is-target { animation: none; } }
 
 /* ===== コードのコピーボタン ===== */
 .code-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .3rem; }
 .code-head h3 { margin: 0; }
 .copy-btn { padding: .15rem .8rem; font-size: .8rem; background: var(--accent2); color: #1f3d33; }
+
+/* ===== ジャンル（索引の見出し・本文の区切り） ===== */
+.index-group { display: flex; align-items: flex-start; gap: .8rem; padding: .4rem 0; border-top: 1px dashed var(--line); }
+.index-group:first-of-type { border-top: 0; }
+.index-genre { flex: 0 0 8.5rem; font-size: .85rem; font-weight: bold; color: var(--sub); padding-top: .25rem; }
+.genre-title { margin: 2rem 0 .2rem; padding-left: .6rem; border-left: 5px solid var(--accent2); font-size: 1.05rem; color: var(--text); }
+.genre-title + .action { border-top: 0; margin-top: .6rem; padding-top: 0; }
+@media (max-width: 560px) { .index-group { flex-direction: column; gap: .2rem; } .index-genre { flex-basis: auto; } }
