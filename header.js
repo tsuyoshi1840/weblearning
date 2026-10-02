@@ -51,7 +51,8 @@ const HEADER_ACTIONS = [
   <button class="js-menu-toggle">メニュー</button>
   <nav class="header-nav">…</nav>
 </header>`,
-            css: `.header-nav { display: flex; }
+            css: `.header-nav { display: flex; }   /* ← flex を block にすると、縦並びになる */
+/* ★開閉の本体：Classが付いたら display を none にして隠す */
 .header.is-min .header-nav { display: none; }`,
             js: `const btn = document.querySelector('.js-menu-toggle');
 const header = document.querySelector('.js-header');
@@ -96,24 +97,50 @@ window.addEventListener('scroll', () => {
         genre: '開閉',
         recommend: true,   // 「おすすめ」に表示（不要なら、この行を消す）
         lead: [
-            '☰ボタンを押すとメニューが開き、✕に変わります。もう一度押すと閉じます。',
-            'スマホでよく見る定番のメニューで、基本は「Classの付け外し」です。',
+            '三本線（☰）のボタンを押すと、メニューが下へ滑らかに開き、線が✕に変形します。',
+            'スマホなど狭い画面向けの定番で、広い画面ではボタンごと隠すのが一般的です。',
             'aria-expanded を更新すると、読み上げソフトにも開閉状態が伝わります。'
         ],
         code: {
             html: `<header class="header">
-  <button class="hamburger js-hamburger" aria-expanded="false">☰</button>
+  <!-- ★ハンバーガーだけ：三本線は文字ではなく、3つの線（span）で作る -->
+  <button class="hamburger js-hamburger" aria-expanded="false" aria-label="メニュー">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
   <nav class="sp-nav js-sp-nav">…</nav>
 </header>`,
-            css: `.sp-nav { display: none; }
-.sp-nav.is-open { display: block; }`,
+            css: `.hamburger { position: relative; width: 44px; height: 44px; background: none; border: 0; }
+.hamburger-line {
+  position: absolute; left: 10px; width: 24px; height: 3px; background: #333;
+  transition: transform 0.3s, opacity 0.3s;   /* ← 0.3s を 1s にすると、変形がゆっくりになる */
+}
+.hamburger-line:nth-child(1) { top: 13px; }
+.hamburger-line:nth-child(2) { top: 20px; }
+.hamburger-line:nth-child(3) { top: 27px; }
+
+/* ★開いたとき：上下の線を斜めに回して✕にし、真ん中の線は消す */
+.hamburger.is-open .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.is-open .hamburger-line:nth-child(2) { opacity: 0; }
+.hamburger.is-open .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* メニューは高さ0から開く（高さを変えて滑らかに見せる） */
+.sp-nav { max-height: 0; overflow: hidden; transition: max-height 0.4s; }
+.sp-nav.is-open { max-height: 300px; }
+
+/* ★広い画面ではボタンを隠して、メニューを常に表示する（← 768px を変えると切り替わる幅が変わる） */
+@media (min-width: 768px) {
+  .hamburger { display: none; }
+  .sp-nav { max-height: none; }
+}`,
             js: `const btn = document.querySelector('.js-hamburger');
 const nav = document.querySelector('.js-sp-nav');
 
 btn.addEventListener('click', () => {
   const isOpen = nav.classList.toggle('is-open');
+  btn.classList.toggle('is-open', isOpen);   // ボタンの✕変形用
   btn.setAttribute('aria-expanded', String(isOpen));
-  btn.textContent = isOpen ? '✕' : '☰';
 });`
         },
         gif: HEADER_GIFS.hamburger
@@ -135,18 +162,48 @@ window.addEventListener('scroll', () => {
     {
         title: 'ドロップダウンメニュー',
         genre: '開閉',
-        lead: ['ボタンを押すと、その下にサブメニューが開きます。', 'もう一度押すと閉じます。', 'hidden を切り替えるだけで作れます。'],
+        lead: [
+            'メニューの項目にカーソルを乗せると、その下に子のメニュー（サブメニュー）が開きます。',
+            '親と子の「階層」があるのが特徴で、項目が多いサイトでよく使われます。',
+            'カーソルを外すと閉じます。キーボード操作（Tabキー）でも開くようにしています。'
+        ],
         code: {
-            html: `<div class="dropdown">
-  <button class="js-drop-btn">メニュー ▼</button>
-  <ul class="drop-list js-drop-list" hidden>…</ul>
-</div>`,
-            css: `.dropdown { position: relative; }
-.drop-list { position: absolute; top: 100%; }`,
-            js: `const btn = document.querySelector('.js-drop-btn');
-const list = document.querySelector('.js-drop-list');
-btn.addEventListener('click', () => {
-  list.hidden = !list.hidden;
+            html: `<nav class="gnav">
+  <ul class="gnav-list">
+    <li><a href="#">ホーム</a></li>
+    <!-- ★ドロップダウンだけ：親の項目の中に、子のリストを入れ子にする -->
+    <li class="gnav-item js-drop-item">
+      <a href="#">サービス ▼</a>
+      <ul class="drop-list">
+        <li><a href="#">制作</a></li>
+        <li><a href="#">保守</a></li>
+        <li><a href="#">相談</a></li>
+      </ul>
+    </li>
+    <li><a href="#">会社概要</a></li>
+  </ul>
+</nav>`,
+            css: `.gnav-list { display: flex; gap: 1.5rem; margin: 0; padding: 0; list-style: none; }
+.gnav-item { position: relative; }   /* 子の位置の基準にする */
+
+/* ★子のリスト：親の真下に置き、普段は透明にして隠しておく */
+.drop-list {
+  position: absolute; top: 100%; left: 0; min-width: 8rem;
+  margin: 0; padding: 0.5rem; list-style: none;
+  background: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;   /* ← 0.2s を 1s にすると、ゆっくり出てくる */
+}
+.gnav-item.is-open .drop-list { opacity: 1; visibility: visible; transform: none; }`,
+            js: `const items = document.querySelectorAll('.js-drop-item');
+
+items.forEach((item) => {
+  // カーソルを乗せたら開く・外したら閉じる
+  item.addEventListener('mouseenter', () => item.classList.add('is-open'));
+  item.addEventListener('mouseleave', () => item.classList.remove('is-open'));
+  // Tabキーで項目に移動したときも開く（キーボード操作への対応）
+  item.addEventListener('focusin', () => item.classList.add('is-open'));
+  item.addEventListener('focusout', () => item.classList.remove('is-open'));
 });`
         },
         gif: HEADER_GIFS.dropdown
