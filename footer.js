@@ -106,7 +106,8 @@ btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth'
             css: `.end-msg { text-align: center; }`,
             js: `const msg = document.querySelector('.js-end-msg');
 window.addEventListener('scroll', () => {
-  const atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 5;
+  const bottom = window.innerHeight + window.scrollY;
+  const atEnd = bottom >= document.documentElement.scrollHeight - 5;
   msg.hidden = !atEnd;
 });`
         },

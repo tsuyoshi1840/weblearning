@@ -128,13 +128,22 @@ items.forEach((item) => {
     <button class="js-modal-close">閉じる</button>
   </div>
 </div>`,
-            css: `.modal { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: grid; place-items: center; }
+            css: `.modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  display: grid; place-items: center;
+}
 .modal[hidden] { display: none; }
 .modal-box { background: #fff; padding: 1.5rem; border-radius: 12px; }`,
             js: `const modal = document.querySelector('.js-modal');
-document.querySelector('.js-modal-open').addEventListener('click', () => { modal.hidden = false; });
-document.querySelector('.js-modal-close').addEventListener('click', () => { modal.hidden = true; });
-window.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.hidden = true; });`
+document.querySelector('.js-modal-open').addEventListener('click', () => {
+  modal.hidden = false;
+});
+document.querySelector('.js-modal-close').addEventListener('click', () => {
+  modal.hidden = true;
+});
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') modal.hidden = true;
+});`
         },
         gif: MAIN_GIFS.modal
     },
@@ -149,8 +158,12 @@ window.addEventListener('keydown', (e) => { if (e.key === 'Escape') modal.hidden
             css: `.count { font-size: 2rem; margin: 0 1rem; }`,
             js: `const out = document.querySelector('.js-count');
 let n = 0;
-document.querySelector('.js-plus').addEventListener('click', () => { out.textContent = ++n; });
-document.querySelector('.js-minus').addEventListener('click', () => { out.textContent = --n; });`
+document.querySelector('.js-plus').addEventListener('click', () => {
+  out.textContent = ++n;
+});
+document.querySelector('.js-minus').addEventListener('click', () => {
+  out.textContent = --n;
+});`
         },
         gif: MAIN_GIFS.counter
     },
@@ -167,8 +180,14 @@ document.querySelector('.js-minus').addEventListener('click', () => { out.textCo
 const view = document.querySelector('.js-slide');
 let i = 0;
 const show = () => { view.textContent = slides[i]; };
-document.querySelector('.js-next').addEventListener('click', () => { i = (i + 1) % slides.length; show(); });
-document.querySelector('.js-prev').addEventListener('click', () => { i = (i - 1 + slides.length) % slides.length; show(); });`
+document.querySelector('.js-next').addEventListener('click', () => {
+  i = (i + 1) % slides.length;
+  show();
+});
+document.querySelector('.js-prev').addEventListener('click', () => {
+  i = (i - 1 + slides.length) % slides.length;
+  show();
+});`
         },
         gif: MAIN_GIFS.slider
     },

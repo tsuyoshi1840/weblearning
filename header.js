@@ -121,9 +121,9 @@ window.addEventListener('scroll', () => {
 .hamburger-line:nth-child(3) { top: 27px; }
 
 /* ★開いたとき：上下の線を斜めに回して✕にし、真ん中の線は消す */
-.hamburger.is-open .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger.is-open .hamburger-line:nth-child(2) { opacity: 0; }
-.hamburger.is-open .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.is-open .hamburger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.is-open .hamburger-line:nth-child(2) { opacity: 0; }
+.is-open .hamburger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* メニューは高さ0から開く（高さを変えて滑らかに見せる） */
 .sp-nav { max-height: 0; overflow: hidden; transition: max-height 0.4s; }
@@ -192,7 +192,8 @@ window.addEventListener('scroll', () => {
   margin: 0; padding: 0.5rem; list-style: none;
   background: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   opacity: 0; visibility: hidden; transform: translateY(-6px);
-  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;   /* ← 0.2s を 1s にすると、ゆっくり出てくる */
+  /* ↓ 0.2s を 1s にすると、ゆっくり出てくる */
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
 }
 .gnav-item.is-open .drop-list { opacity: 1; visibility: visible; transform: none; }`,
             js: `const items = document.querySelectorAll('.js-drop-item');
@@ -412,14 +413,28 @@ area.addEventListener('mouseleave', () => { list.hidden = true; });`
     {
         title: 'スクロール位置に合わせてメニューを強調',
         genre: 'スクロール連動',
-        lead: ['今見ている場所のメニューが、自動で目立ちます。', '各セクションが画面に入ったかを、IntersectionObserver で見張ります。', '目次付きの長いページで、現在位置が分かりやすくなります。'],
+        lead: ['今見ている場所のメニューが、自動で目立ちます。', 'ヘッダーを画面の上に残す（sticky）ので、スクロール中も強調が見えます。', '各セクションが画面に入ったかを、IntersectionObserver で見張ります。'],
         code: {
-            html: `<a class="spy-link js-spy-link" href="#a">A</a>
-<a class="spy-link js-spy-link" href="#b">B</a>
+            html: `<!-- ★ヘッダーは sticky で画面の上に残すので、スクロールしてもメニューが見える -->
+<header class="spy-header">
+  <a class="spy-link js-spy-link" href="#a">A</a>
+  <a class="spy-link js-spy-link" href="#b">B</a>
+  <a class="spy-link js-spy-link" href="#c">C</a>
+</header>
 
-<section class="js-spy-section" id="a">…</section>
-<section class="js-spy-section" id="b">…</section>`,
-            css: `.spy-link.is-active { font-weight: bold; color: #e8590c; }`,
+<section class="spy-section js-spy-section" id="a"><h2>A</h2>…</section>
+<section class="spy-section js-spy-section" id="b"><h2>B</h2>…</section>
+<section class="spy-section js-spy-section" id="c"><h2>C</h2>…</section>`,
+            css: `html { scroll-behavior: smooth; }   /* メニューを押したとき、なめらかに移動する */
+
+/* ★ヘッダーを画面の上に残す（これがないと、スクロールでメニューが見えなくなる） */
+.spy-header { position: sticky; top: 0; background: #fff; padding: .5rem 1rem; }
+
+/* ★各セクションを画面1枚ぶんの高さにして、切り替わりを確かめやすくする
+   （← 100vh を 50vh にすると、短くなる） */
+.spy-section { min-height: 100vh; scroll-margin-top: 3rem; }
+
+.spy-link.is-active { font-weight: bold; color: #e8590c; }`,
             js: `const links = document.querySelectorAll('.js-spy-link');
 
 const io = new IntersectionObserver((entries) => {

@@ -31,7 +31,11 @@ pre { margin: 0; overflow-x: auto; background: var(--code); border: 1px solid va
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 1.4rem; }
 .card.is-top { background: linear-gradient(135deg, #ffe3d3, #dff5ec); color: #4a3f3a; }
 .badge { display: inline-block; background: var(--accent2); color: #1f3d33; border-radius: 999px; padding: 0 .8rem; font-size: .8rem; margin-bottom: .5rem; }
-.code-group { display: grid; gap: .8rem; margin: 1rem 0; }
+/* コードの枠が画面幅からはみ出さないようにする（長い行は、枠の中で横スクロール）
+   minmax(0, 1fr) が肝：これがないと、長いコードに合わせて枠ごと広がってしまう（スマホで起きる） */
+.code-group { display: grid; grid-template-columns: minmax(0, 1fr); gap: .8rem; margin: 1rem 0; }
+.code-group > * { min-width: 0; }
+pre { max-width: 100%; }
 .demo, .sample { margin-top: 1rem; }
 .panel-body { background: var(--code); border-radius: 12px; padding: .8rem 1rem; margin-top: .6rem; }
 .sample-box { margin-top: .8rem; }
@@ -76,3 +80,8 @@ pre { margin: 0; overflow-x: auto; background: var(--code); border: 1px solid va
 .genre-title { margin: 2rem 0 .2rem; padding-left: .6rem; border-left: 5px solid var(--accent2); font-size: 1.05rem; color: var(--text); }
 .genre-title + .action { border-top: 0; margin-top: .6rem; padding-top: 0; }
 @media (max-width: 560px) { .index-group { flex-direction: column; gap: .2rem; } .index-genre { flex-basis: auto; } }
+
+/* ===== 動作のボタン置き場（お気に入り・リンクコピー） ===== */
+.action-tools { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .4rem; }
+.fav-btn { background: var(--card); color: var(--text); border: 1px solid var(--line); }
+.fav-btn.is-fav { background: var(--accent); color: #fff; border-color: var(--accent); }
